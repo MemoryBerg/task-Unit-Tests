@@ -18,52 +18,70 @@ describe('order.js', () => {
         it('instantiates unique object', () => {
             expect(order).not.toBe(order2);
         });
-    });
 
-    describe('addPizza()', () => {
 
-        it('should be called', () => {
-            const spy = spyOn(Order.prototype, 'addPizza');
-            order.addPizza({ topping: 'ham', size: 'small' })
-            expect(spy).toHaveBeenCalled();
+        describe('addPizza()', () => {
+
+            it('should be called', () => {
+                const spy = spyOn(order, 'addPizza');
+                const pizza = { topping: 'ham', size: 'small' }
+                order.addPizza(pizza)
+                expect(order.addPizza).toHaveBeenCalled();
+                expect(order.addPizza).toHaveBeenCalledTimes(1);
+                expect(order.addPizza).toHaveBeenCalledWith(pizza);
+            });
+
+            it('adds pizza to pizzas array', () => {
+                pizza = { toppings: ['ham'], size: 'small' };
+                order.addPizza(pizza)
+                expect(order.pizzas.includes(pizza)).toBeTruthy()
+            });
         });
 
-        it('adds pizza to pizzas array', () => {
-            pizza = { pizzaPrice: 5, toppings: ['ham'], size: 'small' };
-            order.addPizza(pizza)
-            expect(order.pizzas.includes(pizza)).toBeTruthy()
-        });
-    });
+        describe('removePizza', () => {
 
-    describe('removePizza', () => {
-
-        it('remove pizza from pizzas array', () => {
-            order.removePizza(pizza);
-            expect(order.pizzas.includes(pizza)).toBeFalsy();
-        });
-    })
-
-    describe('totalPrice', () => {
-
-        it('should be a number', () => {
-            expect(order.totalPrice).toBeNumber();
-        });
-
-        it('handles pizzaPrice are 0', () => {
-            const testPizza = { pizzaPrice: 0, toppings: ['bacon'], size: 'medium' };
-            order.addPizza(testPizza);
-            expect(() => order.totalPrice).toThrow();
-            expect(() => order.totalPrice).toThrowError(`Pizza can't cost 0 USD`);
-            order.removePizza(testPizza);
-        });
-
-        it('handles if pizza have a price', () => {
-            const testPizza = { toppings: ['bacon'], size: 'medium' };
-            order.addPizza(testPizza);
-            expect(() => order.totalPrice).toThrow();
-            expect(() => order.totalPrice).toThrowError(`Pizza must have a price`);
-            order.removePizza(testPizza);
+            it('remove pizza from pizzas array', () => {
+                order.removePizza(pizza);
+                expect(order.pizzas.includes(pizza)).toBeFalsy();
+            });
         })
 
+        describe('totalPrice', () => {
+            let spy;
+            let testPizza;
+
+            beforeEach(() => {
+                spy = spyOnProperty(order, 'totalPrice').and.callThrough();
+            })
+
+            it('should be a number', () => {
+                testPizza = { pizzaPrice: 2, toppings: ['ham'], size: 'small' };
+                order.addPizza(testPizza);
+                expect(order.totalPrice).toBeNumber();
+            });
+
+            it('handles pizzaPrice are 0', () => {
+                testPizza = { pizzaPrice: 0, toppings: ['ham'], size: 'small' };
+                order.addPizza(testPizza);
+                expect(() => order.totalPrice).toThrow();
+                expect(() => order.totalPrice).toThrowError(`Pizza can't cost 0 USD`);
+            });
+
+            it(`handles if pizza doesn't have a price`, () => {
+                testPizza = { toppings: ['ham'], size: 'small' };
+                order.addPizza(testPizza);
+                expect(() => order.totalPrice).toThrow();
+                expect(() => order.totalPrice).toThrowError(`Pizza must have a price`);
+            });
+
+            it('should return correct total price', () => {
+                expect(order.totalPrice).toBe(0);
+            })
+
+            afterEach(() => {
+                order.removePizza(testPizza);
+            })
+
+        });
     });
 })
