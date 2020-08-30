@@ -1,30 +1,15 @@
 describe('pizza.js', () => {
 
-    let pizza = new Pizza();
-    let pizza2 = new Pizza();
+    let pizza;
+    let pizza2;
 
     describe('Pizza', () => {
         beforeEach(() => {
-            let toppings = {
-                bacon: 0.8,
-                pepperoni: 0.75,
-                sausage: 0.5,
-                ham: 0.5,
-                pineapple: 0.5,
-                olives: 0.3,
-                corn: 0.25,
-                mushrooms: 0.25
-            };
-            const size = {
-                small: 1,
-                medium: 1.5,
-                large: 2
-            };
 
             pizza = new Pizza(['bacon', 'ham'], 'small');
             pizza2 = new Pizza(['pepperoni', 'corn'], 'large');
-        });
 
+        });
 
         it('should create pizza', () => {
             expect(pizza).toBeTruthy();
@@ -40,8 +25,8 @@ describe('pizza.js', () => {
                 expect(pizza.toppingsPrice).toBeNumber();
             });
 
-            it('to check correct price', () => {
-                expect(pizza.pizzaPrice).toBe(1.3)
+            it('should return correct price', () => {
+                expect(pizza.pizzaPrice).toBe(1.3);
             });
 
             it('handles wrong size', () => {
@@ -49,7 +34,6 @@ describe('pizza.js', () => {
                 expect(() => pizza.pizzaPrice).toThrow();
                 expect(() => pizza.pizzaPrice).toThrowError(Error, `Size can't find`);
             });
-
         });
 
         describe('toppingsPrice', () => {
@@ -60,8 +44,16 @@ describe('pizza.js', () => {
                 expect(() => pizza.toppingsPrice).toThrowError(Error, `Topping iron can't find`);
             });
 
+            it('should return correct toppings price', () => {
+                const spy = spyOnProperty(pizza, 'toppingsPrice').and.returnValue(1.3);
+                expect(pizza.toppingsPrice).toBe(1.3);
+                expect(spy).toHaveBeenCalled();
+            });
+
+            it('handle if toppings are not an array', () => {
+                const pizza3 = new Pizza({ topping: 'ham' }, 'large');
+                expect(() => pizza3.toppingsPrice).toThrowError('this.toppings.reduce is not a function')
+            })
         });
-
     });
-
 });
