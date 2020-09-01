@@ -6,7 +6,7 @@ module.exports = function (config) {
         },
         files: [
             '*.js',
-            '*spec.js',
+            '*.spec.js',
         ],
         plugins: [
             'karma-jasmine',
@@ -19,13 +19,13 @@ module.exports = function (config) {
         colors: true,
         browsers: ['Chrome'],
         singleRun: false,
-        client:{
+        client: {
             clearContext: false
         },
         coverageReporter: {
             dir: 'coverage/',
             reporters: [
-                {type: 'html', subdir: 'html'}
+                { type: 'html', subdir: 'html' }
             ]
         }
     })

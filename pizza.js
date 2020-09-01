@@ -18,11 +18,12 @@ const size = {
 class Pizza {
 
     get pizzaPrice() {
-        console.log(size[this.size])
         if (!size[this.size]) {
-            throw Error(`Size can't find`);
+            console.error(`Size can't find`);
+            return 0;
         }
-        return size[this.size] * this.toppingsPrice;
+
+        return +(size[this.size] * this.toppingsPrice).toFixed(2);
     }
 
     get toppingsPrice() {

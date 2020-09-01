@@ -48,10 +48,13 @@ describe('order.js', () => {
 
         describe('totalPrice', () => {
             let spy;
+            let spyError;
             let testPizza;
 
             beforeEach(() => {
                 spy = spyOnProperty(order, 'totalPrice').and.callThrough();
+                spyError = spyOn(console, 'error');
+
             })
 
             it('should be a number', () => {
@@ -63,15 +66,18 @@ describe('order.js', () => {
             it('handles pizzaPrice are 0', () => {
                 testPizza = { pizzaPrice: 0, toppings: ['ham'], size: 'small' };
                 order.addPizza(testPizza);
-                expect(() => order.totalPrice).toThrow();
-                expect(() => order.totalPrice).toThrowError(`Pizza can't cost 0 USD`);
+                order.totalPrice;
+                expect(spyError).toHaveBeenCalled()
+                expect(spyError).toHaveBeenCalledWith(`Pizza can't cost 0 USD`)
+                expect(order.totalPrice).toBe(0)
             });
 
             it(`handles if pizza doesn't have a price`, () => {
                 testPizza = { toppings: ['ham'], size: 'small' };
                 order.addPizza(testPizza);
-                expect(() => order.totalPrice).toThrow();
-                expect(() => order.totalPrice).toThrowError(`Pizza must have a price`);
+                order.totalPrice;
+                expect(spyError).toHaveBeenCalled();
+                expect(spyError).toHaveBeenCalledWith(`Pizza must have a price`);
             });
 
             it('should return correct total price', () => {
