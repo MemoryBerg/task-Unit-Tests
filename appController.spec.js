@@ -188,13 +188,6 @@ describe('appController.js', () => {
 
         });
 
-        xit('should return correct button html', () => {
-            appController.renderPizzasInOrder();
-            appController.renderAddPizzaButtonInOrder();
-            appController.renderTotalPriceInOrder();
-            expect(document.querySelectorAll('.order')[0].lastChild.previousSibling.tagName).toBe('BUTTON')
-        });
-
         it('Should render add button for pizza', () => {
             appController.renderPizzasInOrder();
             appController.renderAddPizzaButtonInOrder();
